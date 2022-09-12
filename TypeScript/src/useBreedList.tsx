@@ -18,7 +18,7 @@ export default function useBreedList(animal: Animal) {
     } else if (localCache[animal]) {
       setBreedList(localCache[animal]);
     } else {
-      requestBreedList();
+      void requestBreedList();
     }
 
     async function requestBreedList() {
@@ -27,12 +27,12 @@ export default function useBreedList(animal: Animal) {
       const res = await fetch(
         `http://pets-v2.dev-apis.com/breeds?animal=${animal}`
       );
-      const json = await res.json();
+      const json = (await res.json()) as BreedListAPIResponse;
       localCache[animal] = json.breeds || [];
       setBreedList(localCache[animal]);
       setStatus("loaded");
     }
   }, [animal]);
 
-  return [breedList, status];
+  return [breedList, status] as [string[], Status];
 }
